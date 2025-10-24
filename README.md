@@ -1,5 +1,7 @@
 # ReactTypeKit — Zed Snippets for React + TypeScript
 
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FMiguelMachado-dev%2FReactTypeKit%2Fmain%2Fdownloads.json&query=downloads&style=for-the-badge&label=Downloads%20%40%20Zed&link=https%3A%2F%2Fzed.dev%2Fextensions%2Freact-type-kit-snippets)
+
 A curated collection of Zed editor snippets to speed up React development in TypeScript: components, hooks, context, Redux Toolkit patterns, and more.
 
 ## 🚀 Features
