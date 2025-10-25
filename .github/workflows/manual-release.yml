@@ -41,11 +41,11 @@ jobs:
           echo "Detected version: $CURRENT_VERSION"
 
           if [ "${{ github.event.inputs.version_bump }}" = "patch" ]; then
-            NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse('${CURRENT_VERSION.strip()}').bump_patch()))")
+            NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_patch()))")
           elif [ "${{ github.event.inputs.version_bump }}" = "minor" ]; then
-            NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse('${CURRENT_VERSION.strip()}').bump_minor()))")
+            NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_minor()))")
           else
-            NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse('${CURRENT_VERSION.strip()}').bump_major()))")
+            NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_major()))")
           fi
 
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
