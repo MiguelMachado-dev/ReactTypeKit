@@ -322,5 +322,148 @@
       "export default ${1:SliceName}Slice.reducer;"
     ],
     "description": "Redux Toolkit createSlice with state and a sample reducer"
+  },
+
+  "useQuery Hook": {
+    "prefix": "useq",
+    "body": [
+      "import { useQuery } from '@tanstack/react-query';",
+      "",
+      "const { data, isLoading, error, isError, isSuccess } = useQuery({",
+      "  queryKey: ['${1:key}'],",
+      "  queryFn: async () => {",
+      "    const response = await fetch('${2:url}');",
+      "    if (!response.ok) {",
+      "      throw new Error('Network response was not ok');",
+      "    }",
+      "    return response.json();",
+      "  },",
+      "  ${3:// options}",
+      "});"
+    ],
+    "description": "TanStack Query useQuery hook"
+  },
+  "useMutation Hook": {
+    "prefix": "usem",
+    "body": [
+      "import { useMutation, useQueryClient } from '@tanstack/react-query';",
+      "",
+      "const queryClient = useQueryClient();",
+      "",
+      "const mutation = useMutation({",
+      "  mutationFn: async (${1:variable}: ${2:type}) => {",
+      "    const response = await fetch('${3:url}', {",
+      "      method: '${4:POST}',",
+      "      headers: {",
+      "        'Content-Type': 'application/json',",
+      "      },",
+      "      body: JSON.stringify(${1:variable}),",
+      "    });",
+      "    if (!response.ok) {",
+      "      throw new Error('Network response was not ok');",
+      "    }",
+      "    return response.json();",
+      "  },",
+      "  onSuccess: () => {",
+      "    queryClient.invalidateQueries({ queryKey: ['${5:queryKey}'] });",
+      "  },",
+      "  ${6:// other options}",
+      "});"
+    ],
+    "description": "TanStack Query useMutation hook"
+  },
+
+  "QueryClient Provider": {
+    "prefix": "qcp",
+    "body": [
+      "import { QueryClient, QueryClientProvider } from '@tanstack/react-query';",
+      "import { ReactQueryDevtools } from '@tanstack/react-query-devtools';",
+      "import { useState } from 'react';",
+      "",
+      "export function QueryProvider({ children }: { children: React.ReactNode }) {",
+      "  const [queryClient] = useState(() => new QueryClient({",
+      "    defaultOptions: {",
+      "      queries: {",
+      "        staleTime: 60 * 1000, // 1 minute",
+      "        refetchOnWindowFocus: false,",
+      "      },",
+      "    },",
+      "  }));",
+      "",
+      "  return (",
+      "    <QueryClientProvider client={queryClient}>",
+      "      {children}",
+      "      <ReactQueryDevtools initialIsOpen={false} />",
+      "    </QueryClientProvider>",
+      "  );",
+      "}"
+    ],
+    "description": "TanStack Query QueryClient Provider setup"
+  },
+
+  "Custom Query Hook": {
+    "prefix": "customq",
+    "body": [
+      "import { useQuery } from '@tanstack/react-query';",
+      "",
+      "export function use${1:ResourceName}(${2:id}: ${3:string | number}) {",
+      "  return useQuery({",
+      "    queryKey: ['${4:resourceName}', ${2:id}],",
+      "    queryFn: async () => {",
+      "      const response = await fetch(`/api/${4:resourceName}/${2:id}`);",
+      "      if (!response.ok) {",
+      "        throw new Error('Network response was not ok');",
+      "      }",
+      "      return response.json();",
+      "    },",
+      "    enabled: !!${2:id},",
+      "    ${5:// other options}",
+      "  });",
+      "}"
+    ],
+    "description": "TanStack Query custom hook for a specific resource"
+  },
+
+  "useInfiniteQuery Hook": {
+    "prefix": "useinf",
+    "body": [
+      "import { useInfiniteQuery } from '@tanstack/react-query';",
+      "",
+      "const {",
+      "  data,",
+      "  error,",
+      "  fetchNextPage,",
+      "  hasNextPage,",
+      "  isFetching,",
+      "  isFetchingNextPage,",
+      "  status,",
+      "} = useInfiniteQuery({",
+      "  queryKey: ['${1:key}'],",
+      "  queryFn: async ({ pageParam = 1 }) => {",
+      "    const response = await fetch(`${2:url}?page=${pageParam}`);",
+      "    if (!response.ok) {",
+      "      throw new Error('Network response was not ok');",
+      "    }",
+      "    return response.json();",
+      "  },",
+      "  getNextPageParam: (lastPage, allPages) => {",
+      "    return lastPage.${3:hasMore} ? allPages.length + 1 : undefined;",
+      "  },",
+      "  ${4:// other options}",
+      "});"
+    ],
+    "description": "TanStack Query useInfiniteQuery hook"
+  },
+
+  "useQueryClient Hook": {
+    "prefix": "useqc",
+    "body": [
+      "import { useQueryClient } from '@tanstack/react-query';",
+      "",
+      "const queryClient = useQueryClient();",
+      "",
+      "${1:// Use queryClient to invalidate queries, prefetch data, etc.}"
+    ],
+    "description": "TanStack Query useQueryClient hook (TSX or TS)"
   }
 }

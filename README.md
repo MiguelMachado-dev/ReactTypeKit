@@ -1,4 +1,4 @@
-# ReactTypeKit — Zed Snippets for React + TypeScript
+# ReactTypeKit — Zed Snippets for React + TypeScript + TanStack Query
 
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FMiguelMachado-dev%2FReactTypeKit%2Fmain%2Fdownloads.json&query=downloads&style=for-the-badge&label=Downloads%20%40%20Zed&labelColor=%23181825&color=%23cba6f7)
 
@@ -6,23 +6,21 @@ A curated collection of Zed editor snippets to speed up React development in Typ
 
 ## 🚀 Features
 
-* Snippets for functional components (arrow & function style)
-* Typed `useState`, `useEffect`, `useMemo`, `useCallback`, `useReducer`, etc.
-* ForwardRef components
-* Custom hook template
-* React Context boilerplate with provider + hook
-* Redux Toolkit slice, store, typed hooks
-* Interface / type / enum helpers
+- Snippets for functional components (arrow & function style)
+- Typed `useState`, `useEffect`, `useMemo`, `useCallback`, `useReducer`, etc.
+- ForwardRef components
+- Custom hook template
+- React Context boilerplate with provider + hook
+- Redux Toolkit slice, store, typed hooks
+- Interface / type / enum helpers
+- TanStack Query snippets
 
 All built assuming you write React in TypeScript, so you get strong typing and consistent patterns.
 
 ## 📦 Installation (Zed)
 
-1. Copy the snippet file (e.g. `react-ts-snippets.json` or `.zed-snippets`) into your Zed snippets folder
-2. Restart Zed or reload snippets
-3. Start using — e.g. type `rfc` to scaffold a typed functional component
-
-*(If Zed supports publishing an extension, you can package this and install via marketplace.)*
+1. Just [click here :D](zed://extension:/react-type-kit-snippets)
+2. That's it. Simple as that.
 
 ## 🧰 Snippet Usage
 
@@ -71,10 +69,10 @@ Then you can tab through placeholders to rename component, props, types, etc.
 
 ## 💡 Tips & Customization
 
-* You can rename or adjust snippet names/prefixes to match your coding style.
-* Add your own snippet variations (e.g. for styled-components, Tailwind, etc.).
-* Use snippet placeholders and tab stops to efficiently navigate through your template when inserted.
-* Keep the file organized: group similar snippets together, and document custom ones.
+- You can rename or adjust snippet names/prefixes to match your coding style.
+- Add your own snippet variations (e.g. for styled-components, Tailwind, etc.).
+- Use snippet placeholders and tab stops to efficiently navigate through your template when inserted.
+- Keep the file organized: group similar snippets together, and document custom ones.
 
 ## 📝 Acknowledgments & License
 
