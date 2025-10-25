@@ -37,14 +37,17 @@ jobs:
       - name: Get current version
         id: version
         run: |
-          CURRENT_VERSION=$(grep '^version = ' extension.toml | sed 's/version = "\(.*\)"/\1/')
+          CURRENT_VERSION=$(grep '^version = ' extension.toml | sed 's/version = "\(.*\)"/\1/' | tr -d '\n' | tr -d '\r')
+          echo "Detected version: $CURRENT_VERSION"
+
           if [ "${{ github.event.inputs.version_bump }}" = "patch" ]; then
-          NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse(\"${CURRENT_VERSION}\").bump_patch()))")
+            NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse('${CURRENT_VERSION.strip()}').bump_patch()))")
           elif [ "${{ github.event.inputs.version_bump }}" = "minor" ]; then
-          NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse(\"${CURRENT_VERSION}\").bump_minor()))")
+            NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse('${CURRENT_VERSION.strip()}').bump_minor()))")
           else
-          NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse(\"${CURRENT_VERSION}\").bump_major()))")
+            NEW_VERSION=$(python -c "import semver; print(str(semver.VersionInfo.parse('${CURRENT_VERSION.strip()}').bump_major()))")
           fi
+
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
           echo "Current version: ${CURRENT_VERSION}"
           echo "New version: ${NEW_VERSION}"
