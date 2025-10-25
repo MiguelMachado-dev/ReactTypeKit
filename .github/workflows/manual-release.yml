@@ -38,8 +38,6 @@ jobs:
         id: version
         run: |
           CURRENT_VERSION=$(grep '^version = ' extension.toml | sed 's/version = "\(.*\)"/\1/' | tr -d '\n' | tr -d '\r')
-          echo "Detected version: $CURRENT_VERSION"
-
           if [ "${{ github.event.inputs.version_bump }}" = "patch" ]; then
             NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_patch()))")
           elif [ "${{ github.event.inputs.version_bump }}" = "minor" ]; then
@@ -47,10 +45,7 @@ jobs:
           else
             NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_major()))")
           fi
-
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
-          echo "Current version: ${CURRENT_VERSION}"
-          echo "New version: ${NEW_VERSION}"
 
       - name: Update extension.toml version
         run: |
@@ -60,21 +55,23 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add .
+          git add extension.toml
           git commit -m "chore: prepare release ${{ steps.version.outputs.new_version }}"
 
-      - name: Setup Git state
+      - name: Create local tag
         run: |
-          git fetch --all
-          git checkout main
-          git pull origin main
-          git branch -u origin/main main
+          git tag v${{ steps.version.outputs.new_version }}
+
+      - name: Validate tag matches version
+        run: |
+          TAG="v${{ steps.version.outputs.new_version }}"
+          FILE_VERSION=$(git show "${TAG}:extension.toml" | grep '^version = ' | sed 's/version = "\(.*\)"/\1/')
+          test "$FILE_VERSION" = "${{ steps.version.outputs.new_version }}"
 
       - name: Push changes
         run: |
-          git tag v${{ steps.version.outputs.new_version }}
+          git push origin main
           git push origin v${{ steps.version.outputs.new_version }}
-          git push origin main:main --force
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
