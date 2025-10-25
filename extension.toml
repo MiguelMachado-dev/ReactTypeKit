@@ -1,6 +1,6 @@
 id = "react-type-kit-snippets"
 name = "ReactTypeKit Snippets"
-version = "2.0.1"
+version = "2.1.0"
 schema_version = 1
 authors = ["Miguel Machado"]
 description =  "A comprehensive set of React, React Native, Redux + TypeScript snippets designed to boost productivity and ensure consistent, type-safe code."
