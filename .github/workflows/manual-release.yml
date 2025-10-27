@@ -70,8 +70,7 @@ jobs:
 
       - name: Push changes
         run: |
-          git push origin main
-          git push origin v${{ steps.version.outputs.new_version }}
+          git push origin main --follow-tags
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -82,8 +81,11 @@ jobs:
 
       - name: Checkout tag for extension publish
         run: |
-          git fetch --tags
-          git checkout v${{ steps.version.outputs.new_version }}
+          git fetch origin --tags --force
+          git checkout "v${{ steps.version.outputs.new_version }}"
+          CHECKED_OUT_VERSION=$(grep '^version = ' extension.toml | sed 's/version = "\(.*\)"/\1/')
+          echo "Version in checked out tag: $CHECKED_OUT_VERSION"
+          test "$CHECKED_OUT_VERSION" = "${{ steps.version.outputs.new_version }}"
 
       - name: Publish to Zed
         uses: huacnlee/zed-extension-action@v1
