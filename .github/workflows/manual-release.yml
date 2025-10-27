@@ -1,20 +1,17 @@
 name: Manual Release
-
-on:
+'on':
   workflow_dispatch:
     inputs:
       version_bump:
-        description: "Version bump type"
+        description: Version bump type
         required: true
         type: choice
         options:
           - patch
           - minor
           - major
-
 permissions:
   contents: write
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -23,77 +20,75 @@ jobs:
         with:
           fetch-depth: 0
           ref: main
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
-
+          python-version: 3.x
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests semver
-
       - name: Get current version
         id: version
-        run: |
-          CURRENT_VERSION=$(grep '^version = ' extension.toml | sed 's/version = "\(.*\)"/\1/' | tr -d '\n' | tr -d '\r')
+        run: >
+          CURRENT_VERSION=$(grep '^version = ' extension.toml | sed 's/version =
+          "\(.*\)"/\1/' | tr -d '\n' | tr -d '\r')
+
           if [ "${{ github.event.inputs.version_bump }}" = "patch" ]; then
-            NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_patch()))")
+            NEW_VERSION=$(python - <<'PY'
+            import semver, os
+            v=os.environ["CURRENT_VERSION"].strip()
+            print(str(semver.VersionInfo.parse(v).bump_patch()))
+            PY
+            )
           elif [ "${{ github.event.inputs.version_bump }}" = "minor" ]; then
-            NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_minor()))")
+            NEW_VERSION=$(python - <<'PY'
+            import semver, os
+            v=os.environ["CURRENT_VERSION"].strip()
+            print(str(semver.VersionInfo.parse(v).bump_minor()))
+            PY
+            )
           else
-            NEW_VERSION=$(python -c "import semver; v='${CURRENT_VERSION}'; print(str(semver.VersionInfo.parse(v.strip()).bump_major()))")
+            NEW_VERSION=$(python - <<'PY'
+            import semver, os
+            v=os.environ["CURRENT_VERSION"].strip()
+            print(str(semver.VersionInfo.parse(v).bump_major()))
+            PY
+            )
           fi
+
           echo "new_version=${NEW_VERSION}" >> $GITHUB_OUTPUT
-
       - name: Update extension.toml version
-        run: |
-          sed -i "s/^version = .*/version = \"${{ steps.version.outputs.new_version }}\"/" extension.toml
-
+        run: >
+          sed -i "s/^version = .*/version = \"${{
+          steps.version.outputs.new_version }}\"/" extension.toml
       - name: Commit changes
-        run: |
+        run: >
           git config --local user.email "action@github.com"
+
           git config --local user.name "GitHub Action"
+
           git add extension.toml
-          git commit -m "chore: prepare release ${{ steps.version.outputs.new_version }}"
 
-      - name: Create local tag
+          git commit -m "chore: prepare release ${{
+          steps.version.outputs.new_version }}"
+      - name: Create tag
         run: |
-          git tag v${{ steps.version.outputs.new_version }}
-
+          git tag "v${{ steps.version.outputs.new_version }}"
       - name: Validate tag matches version
-        run: |
+        run: >
           TAG="v${{ steps.version.outputs.new_version }}"
-          FILE_VERSION=$(git show "${TAG}:extension.toml" | grep '^version = ' | sed 's/version = "\(.*\)"/\1/')
+
+          FILE_VERSION=$(git show "${TAG}:extension.toml" | grep '^version = ' |
+          sed 's/version = "\(.*\)"/\1/')
+
           test "$FILE_VERSION" = "${{ steps.version.outputs.new_version }}"
-
-      - name: Push changes
+      - name: Push main and tag
         run: |
-          git push origin main --follow-tags
-
+          git push origin main
+          git push origin "v${{ steps.version.outputs.new_version }}"
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          name: v${{ steps.version.outputs.new_version }}
-          tag_name: v${{ steps.version.outputs.new_version }}
+          name: 'v${{ steps.version.outputs.new_version }}'
+          tag_name: 'v${{ steps.version.outputs.new_version }}'
           generate_release_notes: true
-
-      - name: Checkout tag for extension publish
-        run: |
-          git fetch origin --tags --force
-          git checkout "v${{ steps.version.outputs.new_version }}"
-          CHECKED_OUT_VERSION=$(grep '^version = ' extension.toml | sed 's/version = "\(.*\)"/\1/')
-          echo "Version in checked out tag: $CHECKED_OUT_VERSION"
-          test "$CHECKED_OUT_VERSION" = "${{ steps.version.outputs.new_version }}"
-
-      - name: Publish to Zed
-        uses: huacnlee/zed-extension-action@v1
-        with:
-          extension-name: react-type-kit-snippets
-          push-to: MiguelMachado-dev/extensions
-          create-pullrequest: true
-          commit-message: "Update react-type-kit-snippets to v${{ steps.version.outputs.new_version }}"
-          tag-name: v${{ steps.version.outputs.new_version }}
-        env:
-          COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
