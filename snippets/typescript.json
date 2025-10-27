@@ -1,6 +1,6 @@
 {
   "Typed Fetch Function": {
-    "prefix": "tsfetch",
+    "prefix": "fetch",
     "body": [
       "export async function fetch${1:Data}(): Promise<${2:Type}> {",
       "  const response = await fetch('${3:/api/endpoint}');",
@@ -11,7 +11,7 @@
     "description": "Typed fetch function with error handling"
   },
   "Record Type": {
-    "prefix": "tsrcd",
+    "prefix": "rcd",
     "body": [
       "export const ${1:record}: Record<${2:string}, ${3:number}> = {",
       "  ${4:key}: ${5:value},",
@@ -20,7 +20,7 @@
     "description": "Record utility type"
   },
   "New Type Alias": {
-    "prefix": "tst",
+    "prefix": "talias",
     "body": ["type ${1:TypeName} = {", "  ${2:key}: ${3:type};", "};"],
     "description": "Create a new type alias"
   },
@@ -29,21 +29,18 @@
     "body": ["interface ${1:InterfaceName} {", "  ${2:key}: ${3:type};", "}"],
     "description": "Create a new interface"
   },
-
   "Function Declaration": {
-    "prefix": "tsfn",
+    "prefix": "fn",
     "body": ["function ${1:fnName}(${2:args}): ${3:void} {", "  $0", "}"],
     "description": "Function boilerplate"
   },
-
   "Arrow Function": {
-    "prefix": "tsafn",
+    "prefix": "afn",
     "body": ["const ${1:fnName} = (${2:args}): ${3:void} => {", "  $0", "};"],
     "description": "Arrow function boilerplate"
   },
-
   "Try/Catch": {
-    "prefix": "tstc",
+    "prefix": "tc",
     "body": [
       "try {",
       "  $0",
@@ -55,66 +52,19 @@
     ],
     "description": "try/catch block"
   },
-
-  "Class with Constructor": {
-    "prefix": "tscls",
-    "body": [
-      "class ${1:ClassName} {",
-      "  constructor(${2:args}) {",
-      "    $0",
-      "  }",
-      "}"
-    ],
-    "description": "Class with constructor"
-  },
-
   "Module Export": {
-    "prefix": "tsxprt",
+    "prefix": "exp",
     "body": ["export {", "  $0", "};"],
     "description": "Export members"
   },
-
   "Import Statement": {
-    "prefix": "tsimprt",
+    "prefix": "imp",
     "body": ["import { ${1:thing} } from '${2:module}';"],
     "description": "Import from a module"
   },
-
-  "Type Guard Function": {
-    "prefix": "tgf",
-    "body": [
-      "function is${1:Type}(value: unknown): value is ${1:Type} {",
-      "  return typeof value === '${2:string}';",
-      "}"
-    ],
-    "description": "Type guard for runtime type checking"
-  },
-  "Redux Toolkit Create Slice": {
-    "prefix": "rtslice",
-    "body": [
-      "import { createSlice, type PayloadAction } from '@reduxjs/toolkit';",
-      "",
-      "interface ${1:SliceName}State {",
-      "  ${2:property}: ${3:type};",
-      "}",
-      "",
-      "const initialState: ${1:SliceName}State = {",
-      "  ${2:property}: ${4:initialValue},",
-      "};",
-      "",
-      "const ${1:SliceName}Slice = createSlice({",
-      "  name: '${1:SliceName}',",
-      "  initialState,",
-      "  reducers: {",
-      "    set${5:Property}(state, action: PayloadAction<${3:type}>) {",
-      "      state.${2:property} = action.payload;",
-      "    },",
-      "  },",
-      "});",
-      "",
-      "export const { set${5:Property} } = ${1:SliceName}Slice.actions;",
-      "export default ${1:SliceName}Slice.reducer;"
-    ],
-    "description": "Redux Toolkit slice boilerplate"
+  "Create enum": {
+    "prefix": "enum",
+    "body": ["enum ${1:enumName} {", "  ${2:NAME} = '${3:value}',", "}$0"],
+    "description": "Create enum"
   }
 }
