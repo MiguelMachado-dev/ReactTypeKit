@@ -19,8 +19,8 @@ All built assuming you write React in TypeScript, so you get strong typing and c
 
 ## 📦 Installation (Zed)
 
-1. Just [click here :D](zed://extension:/react-type-kit-snippets)
-2. That's it. Simple as that.
+1. Just [click here :D](https://zed.dev/extensions/react-type-kit-snippets)
+2. Click "Install in Zed"
 
 ## 🧰 Snippet Usage
 
